@@ -8,6 +8,7 @@ public class RainOfObjectsSpawner : MonoBehaviour
     public GameObject parent;
     public int numberToSpawn;
     public int limit = 20;
+     [Range(0,1)]
     public float rate;
 
     float spawnTimer;
