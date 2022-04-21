@@ -8,6 +8,10 @@ public class HandTracking : MonoBehaviour
     public UDPReceive udpReceive;
     public GameObject[] handPoints;
 
+    private float LastDistance = 1;
+    private float MaxDistance = 0;
+    private float MinDistance = 100;
+
     private string data;
     void Start()
     {
@@ -34,17 +38,28 @@ public class HandTracking : MonoBehaviour
         //0        1*3      2*3
         //x1,y1,z1,x2,y2,z2,x3,y3,z3
 
+        // Find Z to push hand forward
+        // Measure distance between landmakr 0 and 5
+        //int distance = points[0], points[1]
+
         for ( int i = 0; i<21; i++)
         {
 
             float x = 7-float.Parse(points[i * 3])/100;
             float y = float.Parse(points[i * 3 + 1]) / 100;
-            float z = float.Parse(points[i * 3 + 2]) / 100;
+            float z = float.Parse(points[i * 3 + 2]) / 100 * LastDistance;
 
             handPoints[i].transform.localPosition = new Vector3(x, y, z);
 
         }
-
+        LastDistance = Vector3.Distance(handPoints[0].transform.localPosition, handPoints[5].transform.localPosition);
+        if (LastDistance > MaxDistance) {
+            MaxDistance = LastDistance;
+        }
+        if (LastDistance < MinDistance) {
+            MinDistance = LastDistance;
+        }
+        Debug.Log($"lastDistance: {LastDistance}, min: {MinDistance}, max:{MaxDistance}");
 
     }
 }
