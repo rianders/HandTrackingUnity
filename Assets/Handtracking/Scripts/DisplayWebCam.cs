@@ -5,8 +5,10 @@ using UnityEngine;
 public class DisplayWebCam : MonoBehaviour
 {
     public int WebCamNum;
+    private WebCamDevice[] devices;
+    private WebCamTexture tex;
 
-    public WebCamDevice[] devices;
+
     void Start ()
     {
         devices = WebCamTexture.devices;
@@ -20,7 +22,16 @@ public class DisplayWebCam : MonoBehaviour
         Renderer rend = this.GetComponentInChildren<Renderer>();
 
         // assuming the first available WebCam is desired
-        WebCamTexture tex = new WebCamTexture(devices[WebCamNum].name);
+        tex = new WebCamTexture(devices[WebCamNum].name);
+        rend.material.mainTexture = tex;
+        tex.Play();
+    }
+
+    public void SetCamera(int CamNum) {
+        
+        Renderer rend = this.GetComponentInChildren<Renderer>();
+        tex.Stop();
+        tex = new WebCamTexture(devices[CamNum].name);
         rend.material.mainTexture = tex;
         tex.Play();
     }
