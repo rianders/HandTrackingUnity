@@ -21,6 +21,9 @@ public class HandTracking : MonoBehaviour
 
     private string data;
 
+    public float scaleMultiplier = 1f;
+    public float depthMultiplier = 1f;
+
     void Start()
     {
         // Find the hand points from the prefabs
@@ -38,6 +41,7 @@ public class HandTracking : MonoBehaviour
             .Select(t => t.gameObject)
             .ToArray();
     }
+
     void Update()
     {
         data = udpReceive.data;
@@ -70,6 +74,15 @@ public class HandTracking : MonoBehaviour
                     float x = 7 - float.Parse(points[index]) / 100;
                     float y = float.Parse(points[index + 1]) / 100;
                     float z = float.Parse(points[index + 2]) / 100 * lastDistance;
+
+                    // Apply scale multiplier
+                    x *= scaleMultiplier;
+                    y *= scaleMultiplier;
+                    z *= scaleMultiplier;
+
+                    // Apply depth multiplier
+                    z *= depthMultiplier;
+
                     handPoints[j].transform.localPosition = new Vector3(x, y, z);
                 }
             }
