@@ -7,47 +7,55 @@ using System.Threading;
 
 public class UDPReceive : MonoBehaviour
 {
-
     Thread receiveThread;
-    UdpClient client; 
+    UdpClient client;
     public int port = 5052;
     public bool startRecieving = true;
     public bool printToConsole = false;
     public string data;
 
-
     public void Start()
     {
-
-        receiveThread = new Thread(
-            new ThreadStart(ReceiveData));
+        receiveThread = new Thread(new ThreadStart(ReceiveData));
         receiveThread.IsBackground = true;
         receiveThread.Start();
     }
 
+    private void OnDestroy()
+    {
+        startRecieving = false;
+        if (receiveThread != null)
+        {
+            receiveThread.Join();
+            receiveThread = null;
+        }
+        if (client != null)
+        {
+            client.Close();
+            client = null;
+        }
+    }
 
-    // receive thread
     private void ReceiveData()
     {
-
         client = new UdpClient(port);
         while (startRecieving)
         {
-
             try
             {
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] dataByte = client.Receive(ref anyIP);
                 data = Encoding.UTF8.GetString(dataByte);
-                
-
-                if (printToConsole) { print(data); }
+                if (printToConsole)
+                {
+                    print(data);
+                }
             }
             catch (Exception err)
             {
                 print(err.ToString());
+                // Consider logging the exception or handling it in a specific way
             }
         }
     }
-
 }
