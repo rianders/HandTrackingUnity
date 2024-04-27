@@ -24,6 +24,10 @@ public class HandTracking : MonoBehaviour
     public float scaleMultiplier = 1f;
     public float depthMultiplier = 1f;
 
+    public GameObject cubePrefab;
+    private GameObject cube1;
+    private GameObject cube2;
+
     void Start()
     {
         // Find the hand points from the prefabs
@@ -31,6 +35,10 @@ public class HandTracking : MonoBehaviour
         handPoints2 = FindHandPoints(handPrefab2, "Points");
 
         data = "1140, 264, 0, 1020, 302, -30, 927, 390, -46, 910, 502, -65, 970, 568, -73, 953, 523, 15, 906, 605, -47, 925, 508, -74, 955, 470, -82, 1029, 542, 4, 983, 625, -62, 998, 498, -64, 1028, 468, -44, 1106, 536, -18, 1064, 604, -86, 1066, 478, -53, 1095, 445, -8, 1194, 516, -45, 1141, 555, -75, 1129, 473, -46, 1146, 451, -11";
+
+        // Instantiate the cube objects for each hand
+        cube1 = Instantiate(cubePrefab);
+        cube2 = Instantiate(cubePrefab);
     }
 
     private GameObject[] FindHandPoints(GameObject prefab, string parentName)
@@ -114,8 +122,22 @@ public class HandTracking : MonoBehaviour
                 MinDistance2 = minDistance;
             }
 
-            //Debug.Log($"Hand {i + 1}: lastDistance: {lastDistance}, min: {minDistance}, max:{maxDistance}");
+            // Calculate the midpoint of the hand
+            Vector3 midpoint = CalculateHandMidpoint(handPoints);
+
+            // Position the cube at the midpoint
+            GameObject cube = (i == 0) ? cube1 : cube2;
+            cube.transform.position = midpoint;
         }
- 
+    }
+
+    private Vector3 CalculateHandMidpoint(GameObject[] handPoints)
+    {
+        Vector3 sum = Vector3.zero;
+        foreach (GameObject point in handPoints)
+        {
+            sum += point.transform.position;
+        }
+        return sum / handPoints.Length;
     }
 }
