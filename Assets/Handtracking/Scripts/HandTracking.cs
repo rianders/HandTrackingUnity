@@ -114,7 +114,8 @@ public class HandTracking : MonoBehaviour
                 MinDistance2 = minDistance;
             }
 
-            Debug.Log($"Hand {i + 1}: lastDistance: {lastDistance}, min: {minDistance}, max:{maxDistance}");
+            //Debug.Log($"Hand {i + 1}: lastDistance: {lastDistance}, min: {minDistance}, max:{maxDistance}");
         }
+ 
     }
 }
